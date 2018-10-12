@@ -1,74 +1,140 @@
-let pics = document.getElementById("pics");
-let cats = [
-  {
-    name: "aaaa",
-    img: "cat0.jpg",
-    count: 0
+let model = {
+  init: function() {
+    if (!localStorage.cats) {
+      localStorage.cats = JSON.stringify([
+        {
+          name: "aaaa",
+          image: "cat0.jpg",
+          count: 0
+        },
+        {
+          name: "bbbb",
+          image: "cat1.jpg",
+          count: 0
+        },
+        {
+          name: "cccc",
+          image: "cat2.jpg",
+          count: 0
+        },
+        {
+          name: "dddd",
+          image: "cat3.jpg",
+          count: 0
+        },
+        {
+          name: "eeee",
+          image: "cat4.jpg",
+          count: 0
+        }
+      ]);
+    }
   },
-  {
-    name: "bbbb",
-    img: "cat1.jpg",
-    count: 0
+
+  getCats: function() {
+    return JSON.parse(localStorage.cats);
   },
-  {
-    name: "cccc",
-    img: "cat2.jpg",
-    count: 0
+
+  setCats: function(data) {
+    localStorage.cats = JSON.stringify(data);
   },
-  {
-    name: "dddd",
-    img: "cat3.jpg",
-    count: 0
-  },
-  {
-    name: "eeee",
-    img: "cat4.jpg",
-    count: 0
+
+  updateCount: function(index) {
+    let cats = this.getCats();
+    let count = cats[index]["count"];
+    count += 1;
+    cats[index]["count"] = count;
+    this.setCats(cats);
+    return count;
   }
-];
-cats.map(function(cat, i) {
-  insertCat(cat, i);
-});
+};
 
-function insertCat(cat, i) {
-  let catPic = document.createElement("li");
-  let catImage = document.createElement("img");
-  catImage.src = cat.img;
-  catPic.appendChild(catImage);
-  catPic.addEventListener("click", showCat, false);
-  pics.appendChild(catPic);
+let controller = {
+  init: function() {
+    model.init();
+    view.init();
+    this.showCat(0);
+  },
+  getCats: function() {
+    return model.getCats();
+  },
 
-  function showCat() {
-    displayCat(cat.img, cat.name, cat.count, i);
+  showCat: function(i) {
+    let cats = this.getCats();
+    let name = cats[i]["name"];
+    let image = cats[i]["image"];
+    let count = cats[i]["count"];
+    view.displayCat(name, image, count, i);
+  },
+
+  updateCount: function(i) {
+    let count = model.updateCount(i);
+    view.displayCount(count);
   }
-}
+};
 
-function displayCat(image, name, count, index) {
-  let bigPic = document.getElementById("bigPic");
-  if (bigPic.childElementCount) {
-    bigPic.removeChild(bigPic.firstChild);
+let view = {
+  init: function() {
+    this.showList();
+  },
+
+  showList: function() {
+    let catList = document.getElementById("catList");
+    let cats = controller.getCats();
+    cats.map(function(cat, i) {
+      let catItem = document.createElement("li");
+      catItem.textContent = cat.name;
+      catItem.addEventListener(
+        "click",
+        function() {
+          controller.showCat(i);
+        },
+        false
+      );
+      catList.appendChild(catItem);
+    });
+  },
+
+  displayCat: function(name, image, count, i) {
+    let bigPic = document.getElementById("bigPic");
+    if (bigPic.childElementCount) {
+      bigPic.removeChild(bigPic.firstChild);
+    }
+
+    let bigCat = document.createElement("div");
+    let catImage = document.createElement("img");
+    let catName = document.createElement("div");
+    let catCount = document.createElement("div");
+
+    catImage.src = image;
+    catName.textContent = name;
+    catCount.textContent = count;
+    catCount.id = "catCount";
+
+    bigCat.appendChild(catImage);
+    bigCat.appendChild(catName);
+    bigCat.appendChild(catCount);
+
+    bigCat.addEventListener(
+      "click",
+      function() {
+        controller.updateCount(i);
+      },
+      false
+    );
+
+    bigPic.appendChild(bigCat);
+  },
+
+  displayCount: function(count) {
+    let catCount = document.getElementById("catCount");
+    let parent = catCount.parentNode;
+
+    let newCount = document.createElement("div");
+    newCount.textContent = count;
+    newCount.id = "catCount";
+    parent.replaceChild(newCount, catCount);
   }
+};
 
-  let bigCat = document.createElement("div");
-  let catImage = document.createElement("img");
-  let catName = document.createElement("div");
-  let catCount = document.createElement("div");
-  catImage.src = image;
-  catName.textContent = name;
-  catCount.textContent = count;
-
-  bigCat.appendChild(catImage);
-  bigCat.appendChild(catName);
-  bigCat.appendChild(catCount);
-  bigCat.addEventListener(
-    "click",
-    function() {
-      count += 1;
-      catCount.textContent = count;
-      cats[index]["count"] = count;
-    },
-    false
-  );
-
-  bigPic.appendChild(bigCat);
-}
+controller.init();

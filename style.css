@@ -8,9 +8,12 @@ li {
   width: 100px;
 }
 img {
-  width: 100%;
+  width: auto;
+  height: 300px;
 }
-
+#cat-list {
+  border-style: solid;
+}
 /* .name {
   background: grey;
   width: 50%;

@@ -11,13 +11,42 @@
 </head>
 
 <body>
-  <div id="catPics">
-    <ul id="pics"></ul>
-  </div>
-  <div id="bigPic"></div>
 
+  <div id="">
+    <ul id="cat-list"></ul>
+  </div>
+
+  <div id="">
+    <h2 id="cat-name"></h2>
+    <h2 id="cat-count"></h2>
+    <img id="cat-image" src="">
+
+    <button id="admin-btn" type="button">admin</button>
+  </div>
+
+  <form id="admin-form" style="display: none">
+    this is the form
+    <div>
+      <label for="name">Name:
+        <input type="text" id="f-cat-name" name="cat_name">
+      </label>
+    </div>
+    <div>
+      <label for="name">ImgURL:
+        <input type="text" id="f-img-url" name="img_url">
+      </label>
+    </div>
+    <div>
+      <label for="name"># Clicks:
+        <input type="number" id="f-click-count" name="click_count">
+      </label>
+    </div>
+    <button id="cancel-btn" type="button">Cancel</button>
+    <button id="save-btn" type="button">Save</button>
+  </form>
 
 </body>
-<script src="index.js"></script>
+
+<script src="app.js"></script>
 
 </html>
